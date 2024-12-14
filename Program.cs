@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -13,7 +14,19 @@ builder.Services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
+
+// Thêm Razor Pages
+builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// Thêm middleware cho CSRF
+builder.Services.AddAntiforgery();
+
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.FromSeconds(30); // Kiểm tra cookie mỗi 30 giây
+});
+
 // Identity
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -47,12 +60,49 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
                 .AddDefaultTokenProviders();
 
 /* ================ Authorization option ================ */
-builder.Services.ConfigureApplicationCookie(option =>
+//builder.Services.ConfigureApplicationCookie(option =>
+//{
+//    option.LoginPath = "/login/";
+//    option.LogoutPath = "/logout/";
+//    option.AccessDeniedPath = "/khongduoctruycap.html";
+//});
+builder.Services.ConfigureApplicationCookie(options =>
 {
-    option.LoginPath = "/login/";
-    option.LogoutPath = "/logout/";
-    option.AccessDeniedPath = "/khongduoctruycap.html";
+    options.Cookie.HttpOnly = true; // Cookie chỉ được sử dụng qua HTTP
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Cookie hết hạn sau 30 phút
+    options.SlidingExpiration = true; // Gia hạn cookie nếu người dùng hoạt động
+    options.LoginPath = "/login/"; // Đường dẫn cho đăng nhập
+    options.LogoutPath = "/Account/LogOff"; // Đường dẫn cho đăng xuất
+    options.AccessDeniedPath = "/khongduoctruycap.html"; // Đường dẫn khi bị từ chối quyền truy cập
 });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true; // Cookie chỉ sử dụng qua HTTP, không qua JavaScript
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Cookie hết hạn sau 30 phút
+    options.SlidingExpiration = true; // Gia hạn cookie nếu người dùng hoạt động
+
+    options.Events = new CookieAuthenticationEvents
+    {
+        // Kiểm tra cookie mỗi lần tải trang
+        OnValidatePrincipal = context =>
+        {
+            // Kiểm tra xem cookie có còn hợp lệ không
+            if (context.Principal.Identity.IsAuthenticated)
+            {
+                // Nếu cần, kiểm tra thêm logic (ví dụ: khóa tài khoản)
+                var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<AppUser>>();
+                var user = userManager.GetUserAsync(context.Principal).Result;
+                if (user == null || !user.LockoutEnabled) // Hoặc logic khác
+                {
+                    context.RejectPrincipal(); // Hủy cookie
+                }
+            }
+            return Task.CompletedTask;
+        }
+    };
+});
+
 /* ================ DbContext ================ */
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -95,6 +145,8 @@ app.UseRouting();
 app.AddStatusCodePage();
 
 app.UseAuthentication();
+// Thêm middleware vào pipeline
+app.UseMiddleware<RoleMiddleware>();
 app.UseAuthorization();
 
 app.MapControllerRoute(

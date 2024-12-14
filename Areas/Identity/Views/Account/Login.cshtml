@@ -42,33 +42,37 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Login to truyenchu.com!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Đăng nhập</h1>
                                     </div>
                                     <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="user">
                                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
-                                                asp-for="UserNameOrEmail"  aria-describedby="emailHelp"
-                                                placeholder="Tên đăng nhập...">
-                                                <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+                                                   asp-for="UserNameOrEmail" aria-describedby="emailHelp"
+                                                   placeholder="Tên đăng nhập...">
+                                            <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                asp-for="Password" placeholder="Mật khẩu">
+                                                   asp-for="Password" placeholder="Mật khẩu">
                                             <span asp-validation-for="Password" class="text-danger"></span>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" asp-for="RememberMe">
-                                                <label class="custom-control-label text-dark" asp-for="RememberMe">Remember
-                                                    Me</label>
+                                                <label class="custom-control-label text-dark" asp-for="RememberMe">Remember Me</label>
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Đăng nhập
-                                        </a>
+                                        </button>
                                     </form>
+                                    <!-- Thêm khoảng cách giữa nút đăng nhập và liên kết -->
+                                    <div class="text-center mt-4">
+                                        <p>Chưa có tài khoản? <a href="/register" class="text-primary">Đăng ký ngay</a></p>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

@@ -38,3 +38,35 @@ button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
 }
+
+/* Căn chỉnh nút Đăng nhập và Đăng ký */
+.auth-buttons {
+    display: flex; /* Đặt Flexbox để dễ sắp xếp */
+    gap: 10px; /* Tạo khoảng cách giữa các nút */
+    position: absolute; /* Đặt vị trí tuyệt đối */
+    right: 15px; /* Sát góc phải */
+    top: 50%; /* Canh giữa theo chiều dọc */
+    transform: translateY(-50%); /* Đảm bảo nút nằm chính giữa theo chiều dọc */
+    align-items: center;
+}
+
+    .auth-buttons .btn-outline-primary {
+        border: 1px solid #007bff;
+        color: #007bff;
+        transition: all 0.3s ease;
+    }
+
+        .auth-buttons .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+    .auth-buttons .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .auth-buttons .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }

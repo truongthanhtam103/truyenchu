@@ -59,47 +59,145 @@ namespace truyenchu.Areas.Identity.Controllers
 
         //
         // POST: /Account/Login
+        //[HttpPost("/login/")]
+        //[AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        //{
+        //    returnUrl ??= Url.Action("Index", "Admin", new { area = "Admin" });
+        //    _logger.LogInformation(returnUrl);
+        //    ViewData["ReturnUrl"] = returnUrl;
+        //    if (ModelState.IsValid)
+        //    {
+        //        var result = await _signInManager.PasswordSignInAsync(model.UserNameOrEmail, model.Password, model.RememberMe, lockoutOnFailure: true);
+
+        //        if (result.Succeeded)
+        //        {
+        //            _logger.LogInformation(1, "User logged in.");
+        //            return LocalRedirect(returnUrl);
+        //        }
+
+        //        if (result.IsLockedOut)
+        //        {
+        //            _logger.LogWarning(2, "Tài khoản bị khóa");
+        //            return View("Lockout");
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError("Không đăng nhập được.");
+        //            return View(model);
+        //        }
+        //    }
+        //    return View(model);
+        //}
         [HttpPost("/login/")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-            returnUrl ??= Url.Action("Index", "Admin", new { area = "Admin" });
-            _logger.LogInformation(returnUrl);
+            returnUrl ??= Url.Action("Index", "Home");
             ViewData["ReturnUrl"] = returnUrl;
+
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.UserNameOrEmail, model.Password, model.RememberMe, lockoutOnFailure: true);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation(1, "User logged in.");
+                    var user = await _userManager.FindByNameAsync(model.UserNameOrEmail);
+
+                    // Ghi log để kiểm tra vai trò
+                    if (await _userManager.IsInRoleAsync(user, "Administrator"))
+                    {
+                        _logger.LogInformation("User {UserName} is an Administrator.", user.UserName);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("User {UserName} logged in without Administrator role.", user.UserName);
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
 
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning(2, "Tài khoản bị khóa");
+                    _logger.LogWarning("Tài khoản bị khóa.");
                     return View("Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError("Không đăng nhập được.");
+                    ModelState.AddModelError(string.Empty, "Không đăng nhập được.");
                     return View(model);
                 }
             }
+
+            return View(model);
+        }
+
+        // GET: /Account/Register
+        [HttpGet("/register/")]
+        [AllowAnonymous]
+        public IActionResult Register(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        // POST: /Account/Register
+        [HttpPost("/register/")]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+        {
+            returnUrl ??= Url.Action("Index", "Home");
+            ViewData["ReturnUrl"] = returnUrl;
+
+            if (ModelState.IsValid)
+            {
+                var newUser = new AppUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email
+                };
+
+                var result = await _userManager.CreateAsync(newUser, model.Password);
+
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User created a new account.");
+                    await _signInManager.SignInAsync(newUser, isPersistent: false);
+                    return LocalRedirect(returnUrl);
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
             return View(model);
         }
 
         // POST: /Account/LogOff
-        [HttpPost("/logout/")]
+        //[HttpPost("/logout/")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> LogOff(string returnUrl = null)
+        //{
+        //    returnUrl ??= Url.Action(nameof(Login));
+        //    await _signInManager.SignOutAsync();
+        //    _logger.LogInformation("User đăng xuất");
+        //    return LocalRedirect(returnUrl);
+        //}
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogOff(string returnUrl = null)
+        [Route("/Account/LogOff")]
+        public async Task<IActionResult> LogOff()
         {
-            returnUrl ??= Url.Action(nameof(Login));
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User đăng xuất");
-            return LocalRedirect(returnUrl);
+            await _signInManager.SignOutAsync(); // Xóa session người dùng
+            Response.Cookies.Delete(".AspNetCore.Identity.Application"); // Xóa cookie
+            _logger.LogInformation("User logged out.");
+            return Redirect("/"); // Quay lại trang chủ
         }
 
         [Route("/khongduoctruycap.html")]

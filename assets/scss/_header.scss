@@ -112,9 +112,20 @@
             padding-top: 8px;
             border-top: 1px solid rgba($color: white, $alpha: 0.9);
         }
+
         #navbar-search {
             padding-top: 10px;
             border-top: 1px solid rgba($color: white, $alpha: 0.9);
+        }
+
+        .auth-buttons {
+            display: flex; /* Hi?n th? các nút theo hàng ngang */
+            gap: 10px; /* Kho?ng cách gi?a các nút */
+            position: absolute; /* ??t v? trí tuy?t ??i ?? ??nh v? */
+            right: 15px; /* Sát góc ph?i */
+            top: 50%; /* Canh gi?a theo chi?u d?c */
+            transform: translateY(-50%); /* Cân ch?nh chính xác v? trí d?c */
+            align-items: center; /* C?n gi?a theo chi?u d?c */
         }
     }
 }

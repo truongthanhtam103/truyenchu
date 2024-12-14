@@ -9,7 +9,7 @@ using truyenchu.Data;
 
 namespace truyenchu.Areas.Admin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     [Area("Admin")]
     [Route("/Admin/[action]")]
     public class AdminController : Controller
@@ -28,7 +28,7 @@ namespace truyenchu.Areas.Admin.Controllers
             {
                 TotalStory = _context.Stories.Count(),
                 TotalAuthor = _context.Authors.Count(),
-                TotalStoryUpdateToday = _context.Stories.Where(x=>x.DateUpdated >= DateTime.Now.Date).Count()
+                TotalStoryUpdateToday = _context.Stories.Where(x => x.DateUpdated >= DateTime.Now.Date).Count()
             };
             return View(model);
         }

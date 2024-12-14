@@ -50,9 +50,13 @@
             <div class="modal-body">Bạn có chắc muốn đăng xuất?.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Đóng</button>
-                <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post">
+@*                 <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post">
+                    <button type="submit" class="btn btn-primary">Đăng xuất</button>
+                </form> *@
+                <form asp-controller="Account" asp-action="LogOff" method="post">
                     <button type="submit" class="btn btn-primary">Đăng xuất</button>
                 </form>
+
             </div>
         </div>
     </div>

@@ -10,6 +10,7 @@
 }
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,25 +21,26 @@
     <link href="~/lib/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
     @* <link href="~/css/login.admin.css" rel="stylesheet"> *@
+    <link href="~/css/index.css" rel="stylesheet">
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/header.js" asp-append-version="true"></script>
 </head>
-<body class="bg-gradient-primary">
+
+<body class="bg-gradient-primary-2">
     <div class="container">
 
         <!-- Outer Row -->
         <div class="row justify-content-center" style="min-height: 100vh;align-items: center;">
 
             <div class="col-xl-10 col-lg-12 col-md-9">
-
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div style="background-image: url('/contents/login/login_thumb.jpg');" class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div style="background-image: url('/contents/login/login_thumb.png');" class="col-lg-6 d-none d-lg-block bg-login-image"></div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
@@ -47,14 +49,11 @@
                                     <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="user">
                                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                   asp-for="UserNameOrEmail" aria-describedby="emailHelp"
-                                                   placeholder="Tên đăng nhập...">
+                                            <input type="text" class="form-control form-control-user" asp-for="UserNameOrEmail" aria-describedby="emailHelp" placeholder="Tên đăng nhập...">
                                             <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                   asp-for="Password" placeholder="Mật khẩu">
+                                            <input type="password" class="form-control form-control-user" asp-for="Password" placeholder="Mật khẩu">
                                             <span asp-validation-for="Password" class="text-danger"></span>
                                         </div>
                                         <div class="form-group">
@@ -77,11 +76,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
     <!-- Bootstrap core JavaScript-->
@@ -97,7 +93,5 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 </body>
+
 </html>
-
-
-

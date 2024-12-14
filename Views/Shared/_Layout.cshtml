@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/main.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -57,26 +58,26 @@
                                         @foreach (var category in categories)
                                         {
                                             <div class="col-md-4">
-                                    <li><a asp-area="ViewStory" asp-controller="SearchStory" asp-action="SearchCategory" asp-route-categorySlug="@category.CategorySlug" class="dropdown-item">@category.CategoryName</a></li>
-                    </div>
+                                                <li><a asp-area="ViewStory" asp-controller="SearchStory" asp-action="SearchCategory" asp-route-categorySlug="@category.CategorySlug" class="dropdown-item">@category.CategoryName</a></li>
+                                            </div>
                                         }
-            </div>
-            </div>
-            </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Phân loại theo chương
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" asp-controller="SearchStory" asp-action="SearchRange" asp-route-rangeSlug="duoi-100-chuong">Dưới 100 chương</a></li>
-                    <li><a class="dropdown-item" asp-controller="SearchStory" asp-action="SearchRange" asp-route-rangeSlug="100-500-chuong">Từ 100 đến 500 chương</a></li>
-                    <li><a class="dropdown-item" asp-controller="SearchStory" asp-action="SearchRange" asp-route-rangeSlug="500-1000-chuong">Từ 500 đến 1000 chương</a></li>
-                    <li><a class="dropdown-item" asp-controller="SearchStory" asp-action="SearchRange" asp-route-rangeSlug="tren-1000-chuong">Trên 1000 chương</a></li>
-                </ul>
-            </li>
-            <partial name="_SettingPartial" />
-            </ul>
+                                    </div>
+                                </div>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Phân loại theo chương
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="SearchStory" asp-action="SearchRange" asp-route-rangeSlug="duoi-100-chuong">Dưới 100 chương</a></li>
+                                <li><a class="dropdown-item" asp-controller="SearchStory" asp-action="SearchRange" asp-route-rangeSlug="100-500-chuong">Từ 100 đến 500 chương</a></li>
+                                <li><a class="dropdown-item" asp-controller="SearchStory" asp-action="SearchRange" asp-route-rangeSlug="500-1000-chuong">Từ 500 đến 1000 chương</a></li>
+                                <li><a class="dropdown-item" asp-controller="SearchStory" asp-action="SearchRange" asp-route-rangeSlug="tren-1000-chuong">Trên 1000 chương</a></li>
+                            </ul>
+                        </li>
+                        <partial name="_SettingPartial" />
+                    </ul>
             <!-- Tìm kiếm -->
             <partial name="_SearchStoryPartial" />
             </div>
@@ -85,32 +86,34 @@
             <div class="auth-buttons">
                     @if (User.Identity.IsAuthenticated)
                     {
-                    <!-- Nếu là ADMINISTRATOR thì hiển thị Setting và Đăng xuất -->
+                    @* <!-- Nếu là ADMINISTRATOR thì hiển thị Setting và Đăng xuất --> *@
                         // Kiểm tra vai trò nếu cần
-                        @if (User.IsInRole("Administrator"))
-                        {
-                        <a href="/Admin/Index" class="btn btn-secondary ms-2">Setting</a>
-                        }
-                    <form id="logout-form" method="post" action="/Account/LogOff">
-                            @Html.AntiForgeryToken()
-                        <a href="javascript:void(0);" onclick="logOff()" class="btn btn-outline-danger ms-2">Đăng xuất</a>
-                    </form>
+                        <div style="display: flex; align-items: center;">
+                            @if (User.IsInRole("Administrator"))
+                            {
+                                <a href="/Admin/Index" class="btn btn-secondary ms-2">Cài đật</a>
+                            }
+                            <form id="logout-form" method="post" action="/Account/LogOff">
+                                @Html.AntiForgeryToken()
+                                <a href="javascript:void(0);" onclick="logOff()" class="btn btn-outline-danger ms-2">Đăng xuất</a>
+                            </form>
+                        </div>
 
                     }
                     else
                     {
-                    <!-- Hiển thị Đăng nhập/Đăng ký khi chưa đăng nhập -->
-                    <a href="/login/" class="btn btn-outline-primary">Đăng nhập</a>
-                    <a href="/register/" class="btn btn-primary ms-2">Đăng ký</a>
+                        @* <!-- Hiển thị Đăng nhập/Đăng ký khi chưa đăng nhập --> *@
+                        <a href="/login" class="btn btn-outline-primary ms-4">Đăng nhập</a>
+                        <a href="/register" class="btn btn-primary ms-2">Đăng ký</a>
                     }
                     @{
                         var isAuthenticated = User.Identity.IsAuthenticated;
                         var userName = User.Identity.Name;
                         var isAdmin = User.IsInRole("Administrator");
 
-                    <script>
-                        console.log("IsAuthenticated: @isAuthenticated, UserName: @userName, IsAdmin: @isAdmin");
-                    </script>
+                        <script>
+                            console.log("IsAuthenticated: @isAuthenticated, UserName: @userName, IsAdmin: @isAdmin");
+                        </script>
                     }
 
             </div>

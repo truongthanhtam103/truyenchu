@@ -86,13 +86,11 @@
             <div class="auth-buttons">
                     @if (User.Identity.IsAuthenticated)
                     {
-                    @* <!-- Nếu là ADMINISTRATOR thì hiển thị Setting và Đăng xuất --> *@
                         // Kiểm tra vai trò nếu cần
                         <div style="display: flex; align-items: center;">
-                            @if (User.IsInRole("Administrator"))
-                            {
+
                                 <a href="/Admin/Index" class="btn btn-secondary ms-2">Cài đật</a>
-                            }
+                            
                             <form id="logout-form" method="post" action="/Account/LogOff">
                                 @Html.AntiForgeryToken()
                                 <a href="javascript:void(0);" onclick="logOff()" class="btn btn-outline-danger ms-2">Đăng xuất</a>

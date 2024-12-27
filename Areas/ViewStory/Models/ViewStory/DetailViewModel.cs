@@ -5,5 +5,7 @@ namespace truyenchu.Area.ViewStory.Model {
     {
         public Story Story { get; set; }
         public List<Chapter> Chapters { get; set;}
+        public bool IsAddedToBookStory { get; set; } = false;
+
     }
 }

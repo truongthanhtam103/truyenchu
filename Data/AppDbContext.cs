@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using truyenchu.Areas.Identity.Models.UserStory;
 using truyenchu.Models;
 
 namespace truyenchu.Data
@@ -47,6 +48,6 @@ namespace truyenchu.Data
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<StoryCategory> StoryCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
-
+        public DbSet<UserStory> UserStories { get; set; }
     }
 }

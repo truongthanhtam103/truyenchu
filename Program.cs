@@ -150,11 +150,16 @@ app.UseMiddleware<RoleMiddleware>();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "storyDetails",
+    pattern: "{slug}",
+    defaults: new { controller = "BookStory", action = "Index" });
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapAreaControllerRoute(
     name: "default2",
     pattern: "{controller=ViewStory}/{action=Index}/{id?}", areaName: "ViewStory");
+
 
 app.MapRazorPages();
 

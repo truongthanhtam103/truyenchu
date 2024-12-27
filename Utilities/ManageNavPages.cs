@@ -16,7 +16,8 @@ namespace truyenchu.Utilities
 
         public static string User => "User";
         public static string UserNavClass(string activePage) => PageNavClass(activePage, User);
-
+        public static string BookStory => "BookStory";
+        public static string BookStoryNavClass(string activePage) => PageNavClass(activePage, BookStory);
         // public static string Author => "Author";
         // public static string AuthorNavClass(string activePage) => PageNavClass(activePage, Author);
 

@@ -51,7 +51,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-area="Admin" asp-controller="Admin" asp-action="Index">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="bi bi-book-half fs-3"></i>
                 </div>
@@ -119,6 +119,13 @@
                 <a asp-area="Identity" asp-controller="User" asp-action="Index" class="nav-link" aria-controls="collapseUtilities">
                     <i class="fas fa-user fa-lg"></i>
                     <span>Quản lý người dùng</span>
+                </a>
+            </li>
+
+            <li class="nav-item @ManageNavPages.BookStoryNavClass(actionPage)">
+                <a asp-area="Identity" asp-controller="BookStory" asp-action="Index" class="nav-link" aria-controls="collapseUtilities">
+                    <i class="fas fa-user fa-lg"></i>
+                    <span>Tủ truyện</span>
                 </a>
             </li>
 

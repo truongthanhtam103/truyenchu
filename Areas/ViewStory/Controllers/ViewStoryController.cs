@@ -8,6 +8,8 @@ using truyenchu.Data;
 using truyenchu.Models;
 using truyenchu.Service;
 using truyenchu.Utilities;
+using truyenchu.Areas.ViewStory.Models.ReadingHistory;
+using System.Security.Claims;
 
 namespace truyenchu.Area.ViewStory.Controllers
 {
@@ -29,15 +31,51 @@ namespace truyenchu.Area.ViewStory.Controllers
         public async Task<IActionResult> Index()
         {
             var vm = new IndexViewModel();
-            var cookie = Request.Cookies[Const.READING_STORY_COOKIE_NAME];
-            if (cookie != null)
+
+            // Lấy danh sách lịch sử đọc từ cơ sở dữ liệu
+            if (User.Identity.IsAuthenticated)
             {
-                var list = JsonConvert.DeserializeObject<List<ReadingStory>>(cookie);
-                vm.ReadingStories = list.OrderByDescending(x => x.LatestReading).ToList();
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var readingHistories = await _context.ReadingHistory
+                        .Where(x => x.UserId == userId)
+                        .OrderByDescending(x => x.LatestReading)
+                        .ToListAsync();
+
+                    vm.ReadingStories = readingHistories.Select(x => new ReadingStory
+                    {
+                        StorySlug = x.StorySlug,
+                        ChapterOrder = x.ChapterOrder,
+                        LatestReading = x.LatestReading,
+                        StoryName = _context.Stories.FirstOrDefault(s => s.StorySlug == x.StorySlug)?.StoryName
+                    }).ToList();
+                }
             }
+
+            // Lấy danh sách các danh mục
             var categories = await _context.Categories.ToListAsync();
             vm.SelectListItems = new SelectList(categories, nameof(Category.CategorySlug), nameof(Category.CategoryName));
             return View(vm);
+        }
+
+        [Route("api/user-reading-history")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserReadingHistory(string userId)
+        {
+            var histories = await _context.ReadingHistory
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.LatestReading)
+                .Select(x => new
+                {
+                    x.StorySlug,
+                    x.ChapterOrder,
+                    x.LatestReading
+                })
+                .ToListAsync();
+
+            return Json(histories);
         }
 
         [Route("{storySlug?}")]
@@ -80,29 +118,73 @@ namespace truyenchu.Area.ViewStory.Controllers
         public async Task<IActionResult> Chapter(string storySlug, int chapterOrder)
         {
             var vm = new ChapterViewModel();
-            var story = _context.Stories.FirstOrDefault(x => x.Published && x.StorySlug == storySlug);
+            var story = await _context.Stories.FirstOrDefaultAsync(x => x.Published && x.StorySlug == storySlug);
             if (story == null)
                 return NotFound();
 
-            var chapter = _context.Chapters.FirstOrDefault(x => x.StoryId == story.StoryId && x.Order == chapterOrder);
+            var chapter = await _context.Chapters.FirstOrDefaultAsync(x => x.StoryId == story.StoryId && x.Order == chapterOrder);
             if (chapter == null)
             {
                 return RedirectToAction(nameof(DetailStory), new { storySlug = story.StorySlug });
             }
 
-            // save current reading story into cookie
-            var json = GenerateCookieJson(story, chapter);
-            Response.Cookies.Append(Const.READING_STORY_COOKIE_NAME, json);
+            // Lưu lịch sử đọc của user
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await SaveReadingHistory(userId, story, chapter);
+            }
 
             vm.Story = story;
             vm.Chapter = chapter;
-            ViewBag.breadcrumbs = new List<BreadCrumbModel>(){
-                new BreadCrumbModel() {},
-                new BreadCrumbModel() {DisplayName = story.StoryName ,Url = Url.Action(nameof(DetailStory), new {storySlug = story.StorySlug})},
-                new BreadCrumbModel() {DisplayName = "Chương "+chapter.Order, IsActive = true}
+            ViewBag.breadcrumbs = new List<BreadCrumbModel>()
+            {
+                new BreadCrumbModel(),
+                new BreadCrumbModel { DisplayName = story.StoryName , Url = Url.Action(nameof(DetailStory), new { storySlug = story.StorySlug }) },
+                new BreadCrumbModel { DisplayName = "Chương " + chapter.Order, IsActive = true }
             };
 
             return View(vm);
+        }
+
+        private async Task SaveReadingHistory(string userId, Story story, Chapter chapter)
+        {
+            // Kiểm tra xem lịch sử đã tồn tại chưa
+            var existingHistory = await _context.ReadingHistory
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.StorySlug == story.StorySlug);
+
+            if (existingHistory != null)
+            {
+                // Cập nhật thông tin nếu đã tồn tại
+                existingHistory.ChapterOrder = chapter.Order;
+                existingHistory.LatestReading = DateTime.Now;
+            }
+            else
+            {
+                // Thêm mới nếu chưa tồn tại
+                var newHistory = new ReadingHistory
+                {
+                    UserId = userId,
+                    StorySlug = story.StorySlug,
+                    ChapterOrder = chapter.Order,
+                    LatestReading = DateTime.Now
+                };
+                _context.ReadingHistory.Add(newHistory);
+
+                // Giới hạn tối đa 5 lịch sử đọc gần nhất
+                var userHistories = await _context.ReadingHistory
+                    .Where(x => x.UserId == userId)
+                    .OrderByDescending(x => x.LatestReading)
+                    .ToListAsync();
+
+                if (userHistories.Count > 5)
+                {
+                    var oldestHistory = userHistories.Last();
+                    _context.ReadingHistory.Remove(oldestHistory);
+                }
+            }
+            await _context.SaveChangesAsync();
         }
 
         [Route("api/get-chapter")]
@@ -159,42 +241,6 @@ namespace truyenchu.Area.ViewStory.Controllers
             }
             return JsonConvert.SerializeObject(list);
         }
-
-        // private void GetContent(int chap)
-        // {
-        //     var baseUrl = $"https://truyenfull.vn/thinh-the-dich-phi/chuong-{chap}/";
-
-        //     var doc = new HtmlAgilityPack.HtmlDocument();
-        //     doc.LoadHtml(new System.Net.WebClient().DownloadString(baseUrl));
-        //     var root = doc.DocumentNode;
-
-        //     var title = root.Descendants()
-        //                 .Where(n => n.GetAttributeValue("class", "").Equals("chapter-title")).Single().InnerText.Substring(10);
-        //     var chapterContent = root.Descendants()
-        //                 .Where(n => n.GetAttributeValue("class", "").Equals("chapter-c"))
-        //                 .Single().InnerHtml;
-            
-        //     _context.Chapters.Add(new Chapter() {
-        //         Title = title,
-        //         Order = chap,
-        //         DateCreated = DateTime.Now,
-        //         StoryId = 403,
-        //         Content = chapterContent
-        //     });
-        //     _context.SaveChanges();
-        // }
-
-        // [HttpGet("test.html")]
-        // public IActionResult Test(int start, int end)
-        // {
-        //     for (int i = start; i <= end; i++)
-        //     {
-        //         GetContent(i);
-        //         _logger.LogInformation("Get chapter " + i + "successfully");
-        //     }
-
-        //     return Ok();
-        // }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

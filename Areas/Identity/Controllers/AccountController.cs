@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using truyenchu.Areas.Admin.Controllers;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace truyenchu.Areas.Identity.Controllers
 {
@@ -104,9 +106,25 @@ namespace truyenchu.Areas.Identity.Controllers
 
                 if (result.Succeeded)
                 {
+                    // Tìm thông tin người dùng
                     var user = await _userManager.FindByNameAsync(model.UserNameOrEmail);
 
-                    // Ghi log để kiểm tra vai trò
+                    // Thêm Claims
+                    var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id), // Thêm UserId vào NameIdentifier
+                new Claim(ClaimTypes.Name, user.UserName)      // Giữ nguyên UserName
+            };
+
+                    // Tạo ClaimsIdentity
+                    var claimsIdentity = new ClaimsIdentity(claims, "login");
+
+                    // Đăng nhập kèm Claims
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity));
+
+                    // Ghi log kiểm tra vai trò
                     if (await _userManager.IsInRoleAsync(user, "Administrator"))
                     {
                         _logger.LogInformation("User {UserName} is an Administrator.", user.UserName);

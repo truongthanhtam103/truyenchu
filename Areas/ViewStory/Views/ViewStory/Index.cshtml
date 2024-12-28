@@ -21,28 +21,37 @@
 <div class="row">
     <div class="col-xl-4 col-lg-12 order-xl-2">
         <div class="row">
-            @if (Model.ReadingStories != null) {
+            @if (Model.ReadingStories != null && Model.ReadingStories.Any())
+            {
                 <div class="col-12 reading-story">
                     <div class="list-title border-bottom">
-                        <h2>        
+                        <h2>
                             <a href="#">Truyện đang đọc</a>
                         </h2>
                     </div>
                     <table class="story-table table table-borderless">
                         <tbody>
-                                @foreach (var item in Model.ReadingStories) {
+                            @foreach (var item in Model.ReadingStories)
+                            {
                                 <tr>
                                     <td>
                                         <a asp-action="DetailStory" asp-route-storySlug="@item.StorySlug">@item.StoryName</a>
                                     </td>
                                     <td>
-                                        <a asp-action="Chapter" asp-route-storySlug="@item.StorySlug" asp-route-chapterOrder="@item.ChapterOrder">Đọc tiếp Chương @item.ChapterOrder</a>
+                                        <a asp-action="Chapter" asp-route-storySlug="@item.StorySlug" asp-route-chapterOrder="@item.ChapterOrder">
+                                            Đọc tiếp Chương @item.ChapterOrder
+                                        </a>
                                     </td>
                                 </tr>
                             }
-                            
                         </tbody>
                     </table>
+                </div>
+            }
+            @if (Model.ReadingStories == null || !Model.ReadingStories.Any())
+            {
+                <div class="col-12 reading-story">
+                    <p>Bạn chưa đọc truyện nào gần đây.</p>
                 </div>
             }
             <div class="col-12 d-none d-xl-block">

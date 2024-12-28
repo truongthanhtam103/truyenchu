@@ -111,18 +111,23 @@ namespace truyenchu.Areas.Identity.Controllers
 
                     // Thêm Claims
                     var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id), // Thêm UserId vào NameIdentifier
-                new Claim(ClaimTypes.Name, user.UserName)      // Giữ nguyên UserName
-            };
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, user.Id), // Thêm UserId vào NameIdentifier
+                        new Claim(ClaimTypes.Name, user.UserName)      // Giữ nguyên UserName
+                    };
 
                     // Tạo ClaimsIdentity
                     var claimsIdentity = new ClaimsIdentity(claims, "login");
 
                     // Đăng nhập kèm Claims
                     await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(claimsIdentity));
+                        IdentityConstants.ApplicationScheme, // Scheme mặc định của Identity
+                        new ClaimsPrincipal(claimsIdentity),
+                        new AuthenticationProperties
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = DateTime.UtcNow.AddHours(1)
+                        });
 
                     // Ghi log kiểm tra vai trò
                     if (await _userManager.IsInRoleAsync(user, "Administrator"))

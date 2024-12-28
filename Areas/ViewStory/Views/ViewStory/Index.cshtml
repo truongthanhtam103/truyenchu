@@ -21,37 +21,46 @@
 <div class="row">
     <div class="col-xl-4 col-lg-12 order-xl-2">
         <div class="row">
-            @if (Model.ReadingStories != null && Model.ReadingStories.Any())
+            @if (User.Identity.IsAuthenticated)
             {
-                <div class="col-12 reading-story">
-                    <div class="list-title border-bottom">
-                        <h2>
-                            <a href="#">Truyện đang đọc</a>
-                        </h2>
+                @if (Model.ReadingStories != null && Model.ReadingStories.Any())
+                {
+                    <div class="col-12 reading-story">
+                        <div class="list-title border-bottom">
+                            <h2>
+                                <a href="#">Truyện đang đọc</a>
+                            </h2>
+                        </div>
+                        <table class="story-table table table-borderless">
+                            <tbody>
+                                @foreach (var item in Model.ReadingStories)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-action="DetailStory" asp-route-storySlug="@item.StorySlug">@item.StoryName</a>
+                                        </td>
+                                        <td>
+                                            <a asp-action="Chapter" asp-route-storySlug="@item.StorySlug" asp-route-chapterOrder="@item.ChapterOrder">
+                                                Đọc tiếp Chương @item.ChapterOrder
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
-                    <table class="story-table table table-borderless">
-                        <tbody>
-                            @foreach (var item in Model.ReadingStories)
-                            {
-                                <tr>
-                                    <td>
-                                        <a asp-action="DetailStory" asp-route-storySlug="@item.StorySlug">@item.StoryName</a>
-                                    </td>
-                                    <td>
-                                        <a asp-action="Chapter" asp-route-storySlug="@item.StorySlug" asp-route-chapterOrder="@item.ChapterOrder">
-                                            Đọc tiếp Chương @item.ChapterOrder
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                }
+                else
+                {
+                    <div class="col-12 reading-story">
+                        <p>Bạn chưa đọc truyện nào gần đây.</p>
+                    </div>
+                }
             }
-            @if (Model.ReadingStories == null || !Model.ReadingStories.Any())
+            else
             {
                 <div class="col-12 reading-story">
-                    <p>Bạn chưa đọc truyện nào gần đây.</p>
+                    <p>Bạn cần <a href="/login">đăng nhập</a> để xem danh sách truyện đang đọc.</p>
                 </div>
             }
             <div class="col-12 d-none d-xl-block">
@@ -61,7 +70,7 @@
     </div>
     <div class="col-xl-8 col-lg-12 order-xl-1">
         <div class="list-title border-bottom">
-            <h2>        
+            <h2>
                 Truyện mới cập nhật
             </h2>
         </div>

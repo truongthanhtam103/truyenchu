@@ -207,40 +207,40 @@ namespace truyenchu.Area.ViewStory.Controllers
             return Json(pagedData);
         }
 
-        private string GenerateCookieJson(Story story, Chapter chapter)
-        {
-            var cookieItem = new ReadingStory()
-            {
-                StoryName = story.StoryName,
-                StorySlug = story.StorySlug,
-                ChapterOrder = chapter.Order,
-                LatestReading = DateTime.Now
-            };
+        //private string GenerateCookieJson(Story story, Chapter chapter)
+        //{
+        //    var cookieItem = new ReadingStory()
+        //    {
+        //        StoryName = story.StoryName,
+        //        StorySlug = story.StorySlug,
+        //        ChapterOrder = chapter.Order,
+        //        LatestReading = DateTime.Now
+        //    };
 
-            var cookie = Request.Cookies[Const.READING_STORY_COOKIE_NAME];
-            if (cookie == null)
-                return JsonConvert.SerializeObject(new List<ReadingStory>() { cookieItem });
+        //    var cookie = Request.Cookies[Const.READING_STORY_COOKIE_NAME];
+        //    if (cookie == null)
+        //        return JsonConvert.SerializeObject(new List<ReadingStory>() { cookieItem });
 
-            var list = JsonConvert.DeserializeObject<List<ReadingStory>>(cookie);
-            if (list.Any(x => x.StorySlug == story.StorySlug))
-            {
-                var updateItem = list.FirstOrDefault(x => x.StorySlug == story.StorySlug);
-                updateItem.ChapterOrder = chapter.Order;
-                updateItem.LatestReading = DateTime.Now;
-            }
-            else
-            {
-                list.Add(cookieItem);
-                // max length is 5 story reading recently
-                if (list.Count() > 5)
-                {
-                    var removeItem = list.OrderBy(x => x.LatestReading).FirstOrDefault();
-                    list.Remove(removeItem);
-                }
+        //    var list = JsonConvert.DeserializeObject<List<ReadingStory>>(cookie);
+        //    if (list.Any(x => x.StorySlug == story.StorySlug))
+        //    {
+        //        var updateItem = list.FirstOrDefault(x => x.StorySlug == story.StorySlug);
+        //        updateItem.ChapterOrder = chapter.Order;
+        //        updateItem.LatestReading = DateTime.Now;
+        //    }
+        //    else
+        //    {
+        //        list.Add(cookieItem);
+        //        // max length is 5 story reading recently
+        //        if (list.Count() > 5)
+        //        {
+        //            var removeItem = list.OrderBy(x => x.LatestReading).FirstOrDefault();
+        //            list.Remove(removeItem);
+        //        }
 
-            }
-            return JsonConvert.SerializeObject(list);
-        }
+        //    }
+        //    return JsonConvert.SerializeObject(list);
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

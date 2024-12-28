@@ -71,7 +71,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true; // Cookie chỉ được sử dụng qua HTTP
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Cookie hết hạn sau 30 phút
     options.SlidingExpiration = true; // Gia hạn cookie nếu người dùng hoạt động
-    options.LoginPath = "/login/"; // Đường dẫn cho đăng nhập
+    options.LoginPath = "/Identity/Account/Login"; // Đường dẫn cho đăng nhập
     options.LogoutPath = "/Account/LogOff"; // Đường dẫn cho đăng xuất
     options.AccessDeniedPath = "/khongduoctruycap.html"; // Đường dẫn khi bị từ chối quyền truy cập
 });

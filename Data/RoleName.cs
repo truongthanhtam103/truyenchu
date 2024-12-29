@@ -4,5 +4,6 @@ namespace truyenchu.Data
     {
         public const string Administrator = "Administrator";
         public const string Editor = "Editor";
+        public const string User = "User";
     }
 }

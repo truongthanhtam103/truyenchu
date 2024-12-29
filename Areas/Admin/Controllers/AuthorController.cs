@@ -14,7 +14,7 @@ using truyenchu.Utilities;
 
 namespace truyenchu.Areas.Admin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
     [Area("Admin")]
     [Route("manage-author/[action]")]
     public class AuthorController : Controller

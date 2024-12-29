@@ -13,7 +13,7 @@ using truyenchu.Utilities;
 
 namespace truyenchu.Areas.Admin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
     [Area("Admin")]
     [Route("manage-chapter/[action]")]
     public class ChapterController : Controller

@@ -17,7 +17,7 @@ using truyenchu.Utilities;
 
 namespace truyenchu.Areas.Admin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
     [Area("Admin")]
     [Route("manage-story/[action]")]
     public class StoryController : Controller

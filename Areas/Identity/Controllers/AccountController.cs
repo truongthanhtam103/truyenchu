@@ -110,18 +110,23 @@ namespace truyenchu.Areas.Identity.Controllers
                     var user = await _userManager.FindByNameAsync(model.UserNameOrEmail);
 
                     // Thêm Claims
+                    var roles = await _userManager.GetRolesAsync(user); // Lấy vai trò của người dùng
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id), // Thêm UserId vào NameIdentifier
                         new Claim(ClaimTypes.Name, user.UserName)      // Giữ nguyên UserName
                     };
+                    foreach (var role in roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role)); // Thêm từng role
+                    }
 
                     // Tạo ClaimsIdentity
                     var claimsIdentity = new ClaimsIdentity(claims, "login");
 
                     // Đăng nhập kèm Claims
                     await HttpContext.SignInAsync(
-                        IdentityConstants.ApplicationScheme, // Scheme mặc định của Identity
+                        IdentityConstants.ApplicationScheme,
                         new ClaimsPrincipal(claimsIdentity),
                         new AuthenticationProperties
                         {

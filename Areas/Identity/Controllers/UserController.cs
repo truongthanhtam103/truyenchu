@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using truyenchu.Areas.Identity.Models.UserViewModels;
 using truyenchu.Data;
 using truyenchu.ExtendMethods;

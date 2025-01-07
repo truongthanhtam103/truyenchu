@@ -1,7 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -25,8 +22,10 @@ namespace truyenchu.Areas.Identity.Models.AccountViewModels
 
         [DataType(DataType.Password)]
         [Display(Name = "Lặp lại mật khẩu")]
-        [Compare("Password", ErrorMessage = "Mật khẩu lặp lại không chính xác.")]
+        [Required(ErrorMessage = "Phải nhập Lặp lại mật khẩu và phải trùng với mật khẩu.")]
+        [Compare("Password", ErrorMessage = "Phải nhập Lặp lại mật khẩu và phải trùng với mật khẩu.")]
         public string ConfirmPassword { get; set; }
+
 
 
         [DataType(DataType.Text)]

@@ -80,7 +80,7 @@ namespace truyenchu.Areas.Identity.Controllers
                 return View("MyAccount", model);
             }
 
-            TempData["StatusMessage"] = "Cập nhật thông tin tài khoản thành công.";
+            TempData["StatusMessageUpdateAccount"] = "Cập nhật thông tin tài khoản thành công.";
             return RedirectToAction(nameof(MyAccount));
         }
 
@@ -104,7 +104,7 @@ namespace truyenchu.Areas.Identity.Controllers
                 return View("MyAccount", model);
             }
 
-            TempData["StatusMessage"] = "Đổi mật khẩu thành công.";
+            TempData["StatusMessageUpdatePassword"] = "Đổi mật khẩu thành công.";
             return RedirectToAction(nameof(MyAccount));
         }
 

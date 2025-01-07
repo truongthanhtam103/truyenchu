@@ -97,7 +97,10 @@ namespace truyenchu.Areas.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-            returnUrl ??= Url.Action("Index", "Home");
+            if (returnUrl == null)
+            {
+                returnUrl = Url.Action("Index", "Home");
+            }
             ViewData["ReturnUrl"] = returnUrl;
 
             if (ModelState.IsValid)
@@ -154,7 +157,7 @@ namespace truyenchu.Areas.Identity.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Không đăng nhập được.");
+                    ModelState.AddModelError(string.Empty, "Tài khoản hoặc mật khẩu không đúng.");
                     return View(model);
                 }
             }
@@ -177,7 +180,10 @@ namespace truyenchu.Areas.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
-            returnUrl ??= Url.Action("Index", "Home");
+            if (returnUrl == null)
+            {
+                returnUrl = Url.Action("Index", "Home");
+            }
             ViewData["ReturnUrl"] = returnUrl;
 
             if (ModelState.IsValid)
@@ -199,7 +205,14 @@ namespace truyenchu.Areas.Identity.Controllers
 
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    if (error.Description.Contains("is already taken"))
+                    {
+                        ModelState.AddModelError("UserName", "Tên người dùng này đã được sử dụng. Vui lòng chọn tên khác.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
             }
 

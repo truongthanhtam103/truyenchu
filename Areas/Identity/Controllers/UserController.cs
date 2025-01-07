@@ -80,6 +80,7 @@ namespace truyenchu.Areas.Identity.Controllers
             {
                 ModelState.AddModelError(result);
                 _logger.LogError(string.Join(", ", result.Errors.Select(x => x.Description)));
+
                 var roles = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
                 ViewBag.AllRoles = roles;
                 return View(model);

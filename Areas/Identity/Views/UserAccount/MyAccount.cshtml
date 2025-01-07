@@ -2,7 +2,12 @@
 
 <div class="container">
     <h1 class="my-4">Thông tin tài khoản</h1>
-
+    @if (TempData["StatusMessageUpdateAccount"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["StatusMessageUpdateAccount"]
+        </div>
+    }
     <form asp-action="UpdateAccount" method="post">
         <div class="mb-3">
             <label for="UserName" class="form-label">Tên đăng nhập</label>
@@ -32,7 +37,12 @@
 
 <div class="container mt-5">
     <h1 class="my-4">Đổi mật khẩu</h1>
-
+    @if (TempData["StatusMessageUpdatePassword"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["StatusMessageUpdatePassword"]
+        </div>
+    }
     <form asp-action="ChangePassword" method="post">
         <div class="mb-3">
             <label for="OldPassword" class="form-label">Mật khẩu hiện tại</label>

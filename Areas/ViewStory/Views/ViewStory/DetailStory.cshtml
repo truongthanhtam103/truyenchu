@@ -42,17 +42,9 @@
                 </span>
             </div>
             <div class="mb-1">
-                <!-- Hiển thị nút dựa trên trạng thái -->
-                @if (Model.IsAddedToBookStory)
-                {
-                    <button class="btn btn-secondary" disabled>Đã thêm vào tủ</button>
-                }
-                else
-                {
-                    <button class="btn btn-primary" onclick="addToBookStory(@Model.Story.StoryId)">
-                        Thêm vào tủ
-                    </button>
-                }
+                <button class="btn btn-primary" onclick="addToBookStory(@Model.Story.StoryId)">
+                    Thêm vào tủ
+                </button>
             </div>
 
         </div>

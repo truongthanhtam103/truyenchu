@@ -49,8 +49,6 @@ namespace truyenchu.Areas.Identity.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToBookStory(int storyId)
         {
-            _logger.LogInformation("AddToBookStory called with StoryId: {StoryId}", storyId);
-
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 

@@ -19,6 +19,7 @@ namespace truyenchu.Areas.Identity.Models.ManageViewModels
         [Display(Name = "Mật khẩu mới")]
         public string NewPassword { get; set; }
 
+        [Required(ErrorMessage = "Phải nhập {0}")]
         [DataType(DataType.Password)]
         [Display(Name = "Xác nhận lại mật khẩu")]
         [Compare("NewPassword", ErrorMessage = "Mật khẩu xác nhận phải trùng với mật khẩu mới")]

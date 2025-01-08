@@ -82,10 +82,9 @@ Hỗ trợ quản trị viên quản lý website, cập nhật các thể loại
 ![image](https://github.com/TranQuyenSinh/TruyenChu/assets/88172078/db4114e5-05d9-467e-ba1f-a4ee4404b3de)
 
 ***Tạo tài khoản mới***
-![image](https://github.com/TranQuyenSinh/TruyenChu/assets/88172078/3ea251e7-ef75-45e5-8b14-5fa3e1465db4)
 
-***Phân quyền cho người dùng***
-![image](https://github.com/TranQuyenSinh/TruyenChu/assets/88172078/2fc53802-8d89-4017-9e0e-4da7a1590dad)
+
+***Phân quyền cho người dùng:
 
 ## Tổng kết:
 * Website cho phép đọc giả tìm kiếm thông tin truyện dễ dàng, đọc nhiều thể loại truyện đa dạng.
@@ -94,16 +93,9 @@ Hỗ trợ quản trị viên quản lý website, cập nhật các thể loại
 
 
 ## Bản quyền:
-Webite được thiết kế và xây dựng bởi Trần Quyền Sinh.
+Webite được thiết kế và xây dựng bởi sinh viên Học Viện Nông Nghiệp Việt Nam.
 
 Tham khảo một số giao diện của trang web: [https://truyenfull.vn](https://truyenfull.vn/)
-
-
-## Liên hệ:
-Gmail: vn.quyensinh@gmail.com
-
-Facebook: [https://www.facebook.com/tranquyensinh](https://www.facebook.com/tranquyensinh)
-
 
 
 
